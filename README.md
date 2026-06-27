@@ -43,6 +43,12 @@ Assets/
 
 ## Captures d'écran
 
-Disponibles dans `Rendus/Screenshots/`.
+![Gameplay 1](Rendus/Screenshots/Capture%20d%E2%80%99%C3%A9cran%20du%202025-10-22%2013-56-48.png)
+![Gameplay 2](Rendus/Screenshots/Capture%20d%E2%80%99%C3%A9cran%20du%202025-10-22%2013-58-25.png)
+![Gameplay 3](Rendus/Screenshots/Capture%20d%E2%80%99%C3%A9cran%20du%202025-10-22%2014-01-02.png)
+
+## UML
+
+![UML](Rendus/UML/UML.png)
 
 > **Note :** Les assets tiers (`Plugins/`) et le build final ne sont pas inclus dans ce repo pour des raisons de taille.
