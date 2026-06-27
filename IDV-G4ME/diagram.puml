@@ -1,0 +1,225 @@
+@startuml IDV-G4ME Architecture
+
+!define ABSTRACT abstract
+!define INTERFACE interface
+
+' Couleurs personnalisées
+skinparam classBackgroundColor #E1F5FF
+skinparam classArrowColor #0288D1
+skinparam classBorderColor #01579B
+
+' ==================== PLAYER SYSTEM ====================
+package "Player System" #FFE0B2 {
+    class PlayerFPSController {
+        - cameraPivot: Transform
+        - attackOrigin: Transform
+        - interactPromptUI: GameObject
+        - torch: Light
+        - cc: CharacterController
+        - velocity: Vector3
+        - isGrounded: bool
+        - camPitch: float
+        - mouseSensitivityX: float
+        - mouseSensitivityY: float
+        - moveSpeed: float
+        - jumpHeight: float
+        - gravity: float
+        --
+        + Awake()
+        + Start()
+        + Update()
+        + HandleLook()
+        + HandleMoveAndJump()
+        + HandleAttack()
+        + HandleTorch()
+        + ApplyGravity()
+        - LoadSensitivitySettings()
+    }
+
+    class CameraShake {
+        - {static} Instance: CameraShake
+        - originalPosition: Vector3
+        - isShaking: bool
+        - defaultIntensity: float
+        - defaultDuration: float
+        --
+        + Awake()
+        + Start()
+        + Shake(duration, intensity)
+        + ShakeAttack()
+        + ShakeHeavy()
+        - ShakeCoroutine()
+    }
+
+    class TorchFlicker {
+        - torch: Light
+        - flickerSpeed: float
+        - flickerIntensity: float
+        --
+        + Start()
+        + Update()
+    }
+
+    class WallTagPlacer {
+        - wallTag: string
+        --
+        + OnTriggerEnter()
+    }
+}
+
+' ==================== UI SYSTEM ====================
+package "UI System" #C8E6C9 {
+    class GameTimer {
+        - {static} Instance: GameTimer
+        - Running: bool
+        - Elapsed: float
+        --
+        + Awake()
+        + Update()
+        + StartTimer()
+        + StopTimer()
+        + ResetTimer()
+    }
+
+    class ScreenFader {
+        - {static} Instance: ScreenFader
+        - fadeImage: Image
+        - fadeDuration: float
+        --
+        + Awake()
+        + FadeIn(duration)
+        + FadeOut(duration)
+        - FadeCoroutine()
+    }
+
+    class TimerUI {
+        - timerText: Text
+        --
+        + Update()
+    }
+
+    class PauseMenu {
+        - pausePanel: GameObject
+        - isPaused: bool
+        --
+        + Update()
+        + TogglePause()
+    }
+
+    class SettingsMenu {
+        - mouseSensitivityX: float
+        - mouseSensitivityY: float
+        --
+        + Update()
+        + SaveSettings()
+        + LoadSettings()
+    }
+
+    class EndGameUI {
+        + ShowEndScreen()
+    }
+
+    class MainMenuBootstrap {
+        + Start()
+    }
+
+    class DebugUI {
+        + Update()
+    }
+
+    class PauseSettingsToggle {
+        + OnSettingsToggle()
+    }
+
+    class PauseMuteButton {
+        + OnMuteToggle()
+    }
+
+    class BossDefeatNarration {
+        + PlayNarration()
+    }
+}
+
+' ==================== GAME SYSTEM ====================
+package "Game System" #F8BBD0 {
+    class LevelBootstrap {
+        - fadeInDuration: float
+        --
+        + Start()
+    }
+
+    class MazeBuilder {
+        - mazeWidth: int
+        - mazeHeight: int
+        --
+        + Start()
+        + BuildMaze()
+    }
+}
+
+' ==================== SYSTEMS ====================
+package "Systems" #D1C4E9 {
+    class MusicManager {
+        - {static} Instance: MusicManager
+        - audioSource: AudioSource
+        --
+        + PlayMusic()
+        + StopMusic()
+        + ChangeTrack()
+    }
+
+    class PlayerFootsteps {
+        - footstepSound: AudioClip
+        - footstepVolume: float
+        --
+        + PlayFootstep()
+    }
+
+    class EnemyFootsteps {
+        - footstepSound: AudioClip
+        - footstepVolume: float
+        --
+        + PlayFootstep()
+    }
+}
+
+' ==================== ENEMY SYSTEM ====================
+package "Enemy System" #FFCCBC {
+    class BossEnemy {
+        - health: int
+        - attackCooldown: float
+        - detectionRange: float
+        --
+        + TakeHit()
+        + Attack()
+        + Die()
+    }
+}
+
+' ==================== ASSOCIATIONS ====================
+
+PlayerFPSController --> CameraShake : "uses"
+PlayerFPSController --> "attacks" BossEnemy
+PlayerFPSController --> TorchFlicker : "has"
+
+LevelBootstrap --> GameTimer : "creates/uses"
+LevelBootstrap --> ScreenFader : "uses"
+LevelBootstrap --> PlayerFPSController : "finds"
+
+GameTimer ..> TimerUI : "updates"
+
+ScreenFader --> ScreenFader : "singleton"
+GameTimer --> GameTimer : "singleton"
+CameraShake --> CameraShake : "singleton"
+MusicManager --> MusicManager : "singleton"
+
+TimerUI --> GameTimer : "reads Elapsed"
+PauseMenu --> GameTimer : "calls StopTimer()"
+SettingsMenu --> PlayerFPSController : "modifies sensitivity"
+
+MusicManager --> PlayerFootsteps : "plays audio"
+MusicManager --> EnemyFootsteps : "plays audio"
+
+BossEnemy --> CameraShake : "triggers ShakeHeavy()"
+
+@enduml

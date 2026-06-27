@@ -1,0 +1,39 @@
+# Unity auto-generated
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Bb]uild/
+[Bb]uilds/
+IDV-G4ME/Library/
+IDV-G4ME/Temp/
+IDV-G4ME/Logs/
+IDV-G4ME/Builds/
+
+# Third-party plugins (asset store, not source code)
+IDV-G4ME/Assets/Plugins/
+
+# Video (too large for GitHub)
+Rendus/Video/
+
+# Auto-generated project files
+*.csproj
+*.sln
+*.suo
+*.user
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# VS/Rider
+.vs/
+.vscode/
+IDV-G4ME/.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
